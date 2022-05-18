@@ -9,14 +9,15 @@ import java.util.Objects;
 public class Main {
     JFrame window;
     Container cont;
-    JPanel splashScreen, splashButton, mainText, mainSelector;
-    JLabel splashTitle;
+    JPanel splashScreen, splashButton, mainText, mainSelector, playerPanel;
+    JLabel splashTitle, healthLabel, healthLabelValue, weaponLabel, weaponLabelValue;
     JTextArea mainTextArea;
     JButton startGameButton, choice1, choice2, choice3, choice4;
     Font gameFont = null;
     Font gameFontSmall = null;
-
     StartHandler sHandler = new StartHandler();
+    int playerHP;
+    String playerWeapon;
 
     public static void main(String[] args) {
         new Main();
@@ -25,7 +26,9 @@ public class Main {
     }
 
     public Main() {
+        // Importing a custom font
         ImportFont();
+        // Creating a  GUI Window of fixed size
         window = new JFrame();
         window.setSize(900, 600);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -33,9 +36,9 @@ public class Main {
         window.setLocationRelativeTo(null);
         window.getContentPane().setBackground(Color.darkGray);
         window.setLayout(null);
-        window.setVisible(true);
         cont = window.getContentPane();
 
+        // Creating panels of fixed size containing the splash screen text and button
         splashScreen = new JPanel();
         splashScreen.setBounds(150, 150, 600, 100);
         splashScreen.setBackground(Color.darkGray);
@@ -60,6 +63,7 @@ public class Main {
 
         cont.add(splashScreen);
         cont.add(splashButton);
+        window.setVisible(true);
     }
 
     public void beginGame() {
@@ -87,7 +91,7 @@ public class Main {
         mainSelector.add(choice4);
 
         mainTextArea = new JTextArea();
-        mainTextArea.setText(" Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+//        mainTextArea.setText("");
         mainTextArea.setEditable(false);
         mainTextArea.setBackground(Color.black);
         mainTextArea.setForeground(Color.white);
@@ -102,7 +106,7 @@ public class Main {
 
         leftPanel.setPreferredSize(new Dimension(60, 50));
         rightPanel.setPreferredSize(new Dimension(50, 50));
-        upperPanel.setPreferredSize(new Dimension(100, 50));
+        upperPanel.setPreferredSize(new Dimension(100, 70));
         mainSelector.setPreferredSize(new Dimension(50, 275));
 
         leftPanel.setBackground(Color.darkGray);
@@ -110,17 +114,50 @@ public class Main {
         upperPanel.setBackground(Color.darkGray);
         mainSelector.setBackground(Color.darkGray);
 
-
         mainText.add(mainTextArea, BorderLayout.CENTER);
         mainText.add(leftPanel, BorderLayout.WEST);
         mainText.add(rightPanel, BorderLayout.EAST);
         mainText.add(upperPanel, BorderLayout.NORTH);
         mainText.add(mainSelector, BorderLayout.SOUTH);
 
+        playerPanel = new JPanel();
+        playerPanel.setLayout(new GridLayout(1,4));
+        playerPanel.setBackground(Color.darkGray);
+        upperPanel.add(playerPanel);
+
+        healthLabel = new JLabel("HP: ");
+        healthLabel.setFont(gameFontSmall);
+        healthLabel.setForeground(Color.white);
+        playerPanel.add(healthLabel);
+        healthLabel.setHorizontalAlignment(JLabel.RIGHT);
+
+        healthLabelValue = new JLabel();
+        healthLabelValue.setFont(gameFontSmall);
+        healthLabelValue.setForeground(Color.white);
+        playerPanel.add(healthLabelValue);
+        healthLabelValue.setHorizontalAlignment(JLabel.LEFT);
+
+        weaponLabel = new JLabel("Weapon: ");
+        weaponLabel.setFont(gameFontSmall);
+        weaponLabel.setForeground(Color.white);
+        weaponLabel.setHorizontalAlignment(JLabel.RIGHT);
+        playerPanel.add(weaponLabel);
+
+
+        weaponLabelValue = new JLabel();
+        weaponLabelValue.setFont(gameFontSmall);
+        weaponLabelValue.setForeground(Color.white);
+        weaponLabelValue.setHorizontalAlignment(JLabel.LEFT);
+        playerPanel.add(weaponLabelValue);
+
+
         window.setContentPane(mainText);
         window.setVisible(true);
 
+        playerStats();
     }
+
+
 
     public JButton ChoiceButton(String text){
         JButton choice;
@@ -135,8 +172,6 @@ public class Main {
     }
 
     public void ImportFont(){
-        // Font, move to another place, tidy up
-
         try {
             gameFont = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(getClass().getResource("font.ttf")).openStream());
         } catch (FontFormatException | IOException e) {
@@ -149,7 +184,6 @@ public class Main {
         gameFont = gameFont.deriveFont(50f);
         gameFontSmall = gameFont.deriveFont(20f);
 
-        // -------------- End Font
     }
     public class StartHandler implements ActionListener {
 
@@ -157,5 +191,21 @@ public class Main {
             beginGame();
         }
     }
+    public void playerStats(){
+        playerHP = 10;
+        playerWeapon = "Bare Fists";
+        healthLabelValue.setText(String.valueOf(playerHP));
+        weaponLabelValue.setText(playerWeapon);
+
+        startGame();
+    }
+
+    public void startGame(){
+        mainTextArea.setText("You wake up and find yourself surrounded by darkness. A shimmering light passes through" +
+                " the ceiling, revealing an old wooden door. There is a key on the table, it might fit the door." +
+                " What do you do? ");
+    }
+
 
 }
+
